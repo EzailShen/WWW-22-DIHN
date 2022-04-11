@@ -156,6 +156,8 @@ def model_fn(features, label_dict, fc_generator, is_training, keep_prob, params)
     query_trigger = tf.concat([t_item_id, t_city_id, t_cate_id, t_poi_id, t_tag_id], axis=1)
 
     activation_fn = tf.nn.relu
+    # used for mixture tensor
+    activation_fn_2 = tf.nn.sigmoid 
 
     ########################################################
     # User Intent Network
@@ -175,7 +177,7 @@ def model_fn(features, label_dict, fc_generator, is_training, keep_prob, params)
         input = layers.batch_norm(input, is_training=is_training, activation_fn=activation_fn,
                                   variables_collections=[dnn_parent_scope])
 
-        fusing_gate = layers.fully_connected(input, 40, activation_fn=None, scope='ffn_2',
+        fusing_gate = layers.fully_connected(input, 40, activation_fn=activation_fn_2, scope='ffn_2',
                                        variables_collections=[dnn_parent_scope])
 
         input = layers.batch_norm(fusing_gate, is_training=is_training, activation_fn=activation_fn,
